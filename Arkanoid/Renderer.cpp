@@ -23,6 +23,8 @@ Renderer::Renderer()
 	// ---- TTF ----
 	if (TTF_Init() != 0) throw"No es pot inicialitzar SDL_ttf";
 
+	//Load textures
+	LoadTexture("background_splashscreen", "../res/img/fondo_joc.png");
 };
 
 
@@ -58,7 +60,7 @@ void Renderer::LoadTexture(const std::string &id, const std::string &path) {
 };
 
 void Renderer::LoadTextureText(const std::string &fontId, mtdl::Text text) {
-	SDL_Surface	*tmpSurf = TTF_RenderText_Blended(m_fontData[fontId], text.text.c_str(), SDL_Color{ text.color.r, text.color.g, text.color.b,text.color.a });
+	SDL_Surface	*tmpSurf = TTF_RenderText_Blended(m_fontData[fontId], text.text.c_str(), SDL_Color{ static_cast<Uint8>(text.color.r), static_cast<Uint8>(text.color.g), static_cast<Uint8>(text.color.b), static_cast<Uint8>(text.color.a) });
 	if (tmpSurf == nullptr) throw "Unable to create the SDL text surface";
 	SDL_Texture *texture{ SDL_CreateTextureFromSurface(m_renderer, tmpSurf) };
 	m_textureData[text.id] = texture;
@@ -71,8 +73,10 @@ mtdl::Vector2 Renderer::GetTextureSize(const std::string &id) {
 	return {w, h};
 };
 
-void Renderer::PushImage(const std::string &id, const SDL_Rect &rect) {
-	SDL_RenderCopy(m_renderer, m_textureData[id], nullptr, &rect);
+void Renderer::PushImage(const std::string &id, const mtdl::Rect &rect) {
+	SDL_Rect rectangle{ rect.position.x, rect.position.y, rect.w , rect.h };
+
+	SDL_RenderCopy(m_renderer, m_textureData[id], nullptr, &rectangle);
 };
 
 void Renderer::PushSprite(const std::string &id, const SDL_Rect &rectSprite,const SDL_Rect &rectPos) {

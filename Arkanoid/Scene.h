@@ -4,9 +4,9 @@
 class Scene
 {
 	std::string backgroundTexture;
-	mtdl::Rect backgroundRect;
 
 public:
+	bool sceneFinished = false;
 	Scene();
 	~Scene();
 	virtual void Update() = 0;

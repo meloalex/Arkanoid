@@ -1,15 +1,22 @@
 #pragma once
+#include <iostream>
 #include "Scene.h"
+#include <time.h>
+#include "Renderer.h"
+#include "../dep/inc/mtdl/mtdl.h"
 
 class SplashScreen :
 	public Scene
 {
 private:
-	int timer;
+	float timer;
+	clock_t lastTime;
+	float deltaTime;
 public:
-	bool timeGone;
 
 	SplashScreen();
 	~SplashScreen();
+	void Update();
+	void Draw();
 };
 

@@ -33,13 +33,13 @@ namespace mtdl {
 
 	struct Color			//Color
 	{
-		Uint8 r;
-		Uint8 g;
-		Uint8 b;
-		Uint8 a;
+		int r;
+		int g;
+		int b;
+		int a;
 
 		Color() {}
-		Color(Uint8 _r, Uint8 _g, Uint8 _b, Uint8 _a) {
+		Color(int _r, int _g, int _b, int _a) {
 			r = _r;
 			g = _g;
 			b = _b;
@@ -78,7 +78,7 @@ namespace mtdl {
 
 	/*---FUNCTIONS---*/
 	#pragma region Functions
-	bool VectorRectCollision(Vector2 v, Rect r) {
+	/*bool VectorRectCollision(Vector2 v, Rect r) {
 		return (v.x >= r.position.x) && (v.x <= (r.position.x + r.w)) && (v.y >= r.position.y) && (v.y <= (r.position.y + r.h));
 	}
 
@@ -87,7 +87,14 @@ namespace mtdl {
 		Vector2 botLeft(r.position.x, r.position.y + r.h);
 		Vector2 botRight(r.position.x + r.w, r.position.y + r.h);
 		return VectorRectCollision(r.position, t) || VectorRectCollision(topRight, t) || VectorRectCollision(botLeft, t) || VectorRectCollision(botRight, t);
-	}
+	}*/
+	#pragma endregion
+
+	#pragma region Conversions
+	/*SDL_Rect RectToSDLRect(Rect r) {
+		SDL_Rect retu{ r.position.x, r.position.y, r.w , r.h };
+		return retu;
+	}*/
 	#pragma endregion
 
 }
