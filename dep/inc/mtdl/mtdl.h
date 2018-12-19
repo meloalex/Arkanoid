@@ -29,6 +29,18 @@ namespace mtdl {
 			w = _w;
 			h = _h;
 		}
+		Rect(int _x, int _y, Vector2 r) {
+			position.x = _x;
+			position.y = _y;
+			w = r.x;
+			h = r.y;
+		}
+		Rect(Vector2 e, Vector2 r) {
+			position.x = e.x;
+			position.y = e.y;
+			w = r.x;
+			h = r.y;
+		}
 	};
 
 	struct Color			//Color
@@ -68,7 +80,7 @@ namespace mtdl {
 		std::string id;
 
 		Text() {}
-		Text(std::string _text, Color _color, int _id) {
+		Text(std::string _text, Color _color, std::string _id) {
 			text = _text;
 			color = _color;
 			id = _id;
@@ -78,16 +90,16 @@ namespace mtdl {
 
 	/*---FUNCTIONS---*/
 	#pragma region Functions
-	/*bool VectorRectCollision(Vector2 v, Rect r) {
+	inline bool VectorRectCollision(mtdl::Vector2 v, mtdl::Rect r) {
 		return (v.x >= r.position.x) && (v.x <= (r.position.x + r.w)) && (v.y >= r.position.y) && (v.y <= (r.position.y + r.h));
 	}
 
-	bool RectRectCollision(Rect r, Rect t) {
+	inline bool RectRectCollision(Rect r, Rect t) {
 		Vector2 topRight(r.position.x + r.w, r.position.y);
 		Vector2 botLeft(r.position.x, r.position.y + r.h);
 		Vector2 botRight(r.position.x + r.w, r.position.y + r.h);
 		return VectorRectCollision(r.position, t) || VectorRectCollision(topRight, t) || VectorRectCollision(botLeft, t) || VectorRectCollision(botRight, t);
-	}*/
+	}
 	#pragma endregion
 
 	#pragma region Conversions
