@@ -7,7 +7,7 @@
 #include "../dep/inc/mtdl/mtdl.h"
 
 #define SCREEN_WIDTH 800
-#define SCREEN_HEIGHT 800
+#define SCREEN_HEIGHT 600
 
 class Renderer {
 

@@ -2,6 +2,7 @@
 
 SplashScreen::SplashScreen()
 {
+	backgroundTexture = "background_splashscreen";
 	timer = 3;
 	deltaTime = 0;
 	lastTime = clock();
@@ -13,7 +14,7 @@ SplashScreen::~SplashScreen()
 
 }
 
-void SplashScreen::Update() {
+void SplashScreen::Update(InputManager inputManager) {
 	deltaTime = (clock() - lastTime);
 	lastTime = clock();
 	deltaTime /= CLOCKS_PER_SEC;
@@ -28,6 +29,6 @@ void SplashScreen::Update() {
 
 void SplashScreen::Draw() {
 	Renderer::Instance()->Clear();
-	Renderer::Instance()->PushImage("background_splashscreen", mtdl::Rect(0, 0, 800, 800));
+	Renderer::Instance()->PushImage(backgroundTexture, mtdl::Rect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT));
 	Renderer::Instance()->Render();
 }

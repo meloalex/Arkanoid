@@ -24,7 +24,12 @@ Renderer::Renderer()
 	if (TTF_Init() != 0) throw"No es pot inicialitzar SDL_ttf";
 
 	//Load textures
-	LoadTexture("background_splashscreen", "../res/img/fondo_joc.png");
+	LoadTexture("background_splashscreen", "../res/img/background_splashscreen.png");
+	LoadTexture("background_menu", "../res/img/Background.jpg");
+
+	//Load font
+	LoadFont(mtdl::Font("../res/font/sunspire.ttf", 24, "sunspire24"));
+	LoadFont(mtdl::Font("../res/font/sunspire.ttf", 30, "sunspire30"));
 };
 
 

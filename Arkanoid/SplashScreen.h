@@ -9,14 +9,15 @@ class SplashScreen :
 	public Scene
 {
 private:
+	std::string backgroundTexture;
 	float timer;
 	clock_t lastTime;
 	float deltaTime;
-public:
 
+public:
 	SplashScreen();
 	~SplashScreen();
-	void Update();
+	void Update(InputManager inputManager);
 	void Draw();
 };
 

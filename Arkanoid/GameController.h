@@ -1,13 +1,17 @@
 #pragma once
+#include "InputManager.h"
 #include "Scene.h"
 
 class GameController
 {
-public:
-	enum class GameState{EXIT, SPLASH_SCREEN, MENU, GAMEPLAY, RANKING};
-	bool isRunning;
+private:
+	enum class GameState { EXIT, SPLASH_SCREEN, MENU, GAMEPLAY, RANKING };
 	GameState gameState;
 	Scene* currentScene;
+	InputManager inputManager;
+
+public:
+	bool isRunning;
 
 	GameController();
 	~GameController();

@@ -11,9 +11,12 @@ GameController::GameController()
 
 GameController::~GameController()
 {
+	delete(currentScene);
 }
 
 void GameController::Update() {
+	if (inputManager.input.quit) gameState = GameState::EXIT;
+
 	switch (gameState) {
 	case GameState::SPLASH_SCREEN:
 		if (currentScene->sceneFinished)
@@ -37,6 +40,7 @@ void GameController::Update() {
 		break;
 	}
 
-	currentScene->Update();
+	inputManager.Update();
+	currentScene->Update(inputManager);
 	currentScene->Draw();
 }
