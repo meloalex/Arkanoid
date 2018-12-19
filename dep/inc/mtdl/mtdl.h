@@ -10,6 +10,7 @@ namespace mtdl {
 		int x;
 		int y;
 
+		Vector2() {}
 		Vector2(int _x, int _y) {
 			x = _x;
 			y = _y;
@@ -21,6 +22,7 @@ namespace mtdl {
 		int w;
 		int h;
 
+		Rect() {}
 		Rect(int _x, int _y, int _w, int _h) {
 			position.x = _x;
 			position.y = _y;
@@ -29,29 +31,48 @@ namespace mtdl {
 		}
 	};
 
-	struct Color		//Color
+	struct Color			//Color
 	{
-		int r, g, b, a;
+		Uint8 r;
+		Uint8 g;
+		Uint8 b;
+		Uint8 a;
 
-		Color(int _r, int _g, int _b, int _a) : r(_r), g(_g), b(_b), a(_a) {}
+		Color() {}
+		Color(Uint8 _r, Uint8 _g, Uint8 _b, Uint8 _a) {
+			r = _r;
+			g = _g;
+			b = _b;
+			a = _a;
+		}
 	};
 
-	struct Font		//Font
+	struct Font				//Font
 	{
 		std::string path;
 		int size;
 		std::string id;
 
-		Font(std::string _path, int _size, std::string _id) : path(_path), size(_size), id(_id) {}
+		Font() {}
+		Font(std::string _path, int _size, std::string _id) {
+			path = _path;
+			size = _size;
+			id = _id;
+		}
 	};
 
-	struct Text		//Text
+	struct Text				//Text
 	{
 		std::string text;
 		Color color;
 		std::string id;
 
-		Text(std::string _text, Color _color, int _id) : text(_text), color(_color), id(_id) {}
+		Text() {}
+		Text(std::string _text, Color _color, int _id) {
+			text = _text;
+			color = _color;
+			id = _id;
+		}
 	};
 	#pragma endregion
 
