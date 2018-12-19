@@ -10,7 +10,10 @@ namespace mtdl {
 		int x;
 		int y;
 
-		Vector2(int _x, int _y) : x(_x), y(_y) {}
+		Vector2(int _x, int _y) {
+			x = _x;
+			y = _y;
+		}
 	};
 
 	struct Rect {			//Rectangle
@@ -18,7 +21,12 @@ namespace mtdl {
 		int w;
 		int h;
 
-		Rect(int _x, int _y, int _w, int _h) : position.x(_x), position.y(_y), w(_w), h(_h) {}
+		Rect(int _x, int _y, int _w, int _h) {
+			position.x = _x;
+			position.y = _y;
+			w = _w;
+			h = _h;
+		}
 	};
 
 	struct Color		//Color
