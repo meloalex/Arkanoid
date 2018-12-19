@@ -62,7 +62,10 @@ namespace mtdl {
 	}
 
 	bool RectRectCollision(Rect r, Rect t) {
-		return VectorRectCollision(r.position, t) || VectorRectCollision(new Vector2(r.position.x + r.w, r.position.y), t) || VectorRectCollision(new Vector2(r.position.x, r.position.y + r.h), t) || VectorRectCollision(new Vector2(r.position.x + r.w, r.position.y + r.h) + r.w, t);
+		Vector2 topRight(r.position.x + r.w, r.position.y);
+		Vector2 botLeft(r.position.x, r.position.y + r.h);
+		Vector2 botRight(r.position.x + r.w, r.position.y + r.h);
+		return VectorRectCollision(r.position, t) || VectorRectCollision(topRight, t) || VectorRectCollision(botLeft, t) || VectorRectCollision(botRight, t);
 	}
 	#pragma endregion
 
