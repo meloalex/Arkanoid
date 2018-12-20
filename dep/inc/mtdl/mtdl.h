@@ -29,6 +29,12 @@ namespace mtdl {
 			w = _w;
 			h = _h;
 		}
+		Rect(Vector2 r, int _w, int _h) {
+			position.x = r.x;
+			position.y = r.y;
+			w = _w;
+			h = _h;
+		}
 		Rect(int _x, int _y, Vector2 r) {
 			position.x = _x;
 			position.y = _y;
@@ -99,6 +105,14 @@ namespace mtdl {
 		Vector2 botLeft(r.position.x, r.position.y + r.h);
 		Vector2 botRight(r.position.x + r.w, r.position.y + r.h);
 		return VectorRectCollision(r.position, t) || VectorRectCollision(topRight, t) || VectorRectCollision(botLeft, t) || VectorRectCollision(botRight, t);
+	}
+
+	inline mtdl::Rect RotateRect90(Rect r) {
+		mtdl::Rect t;
+		t.position = r.position;
+		t.w = r.h;
+		t.h = r.w;
+		return t;
 	}
 	#pragma endregion
 }
