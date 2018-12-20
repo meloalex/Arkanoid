@@ -6,10 +6,12 @@
 #include "Gameplay.h"
 #include "Ranking.h"
 
+enum class GameState { EXIT, SPLASH_SCREEN, MENU, GAMEPLAY, RANKING };
+
 class GameController
 {
 private:
-	enum class GameState { EXIT, SPLASH_SCREEN, MENU, GAMEPLAY, RANKING };
+	
 	GameState gameState;
 	Scene* currentScene;
 	InputManager inputManager;

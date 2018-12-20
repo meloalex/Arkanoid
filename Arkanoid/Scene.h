@@ -4,7 +4,7 @@
 
 struct SceneStatus
 {
-	bool finished;
+	bool finished = false;
 	int status;
 };
 

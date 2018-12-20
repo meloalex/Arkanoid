@@ -26,6 +26,10 @@ Renderer::Renderer()
 	//Load textures
 	LoadTexture("background_splashscreen", "../res/img/background_splashscreen.png");
 	LoadTexture("background_menu", "../res/img/Background.jpg");
+	LoadTexture("player", "../res/img/platform.png");
+	LoadTexture("ball", "../res/img/ball.png");
+	LoadTexture("bTrans", "../res/img/bTrans.png");
+	LoadTexture("bricks", "../res/img/bricks.jpg");
 
 	//Load font
 	LoadFont(mtdl::Font("../res/font/sunspire.ttf", 24, "sunspire24"));

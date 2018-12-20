@@ -1,6 +1,6 @@
-﻿  GameController.cpp
+﻿  Block.cpp
   Gameplay.cpp
-  Renderer.cpp
+c:\users\alexe\source\repos\arkanoid\arkanoid\gameplay.cpp(89): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
   Generating Code...
   Arkanoid.vcxproj -> C:\Users\alexe\source\repos\Arkanoid\\bin\Win32Debug\Arkanoid.exe
   0 archivo(s) copiado(s)
