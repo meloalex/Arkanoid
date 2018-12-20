@@ -3,6 +3,8 @@
 #include "Renderer.h"
 #include "Ball.h"
 #include "Player.h"
+#include <time.h>
+#include <iostream>
 
 #define BLOCK_WIDTH Renderer::Instance()->GetTextureSize("bricks").x/5
 #define BLOCK_HEIGHT Renderer::Instance()->GetTextureSize("bricks").y/3
@@ -13,6 +15,11 @@ class Block
 private:
 	BlockType type;
 	std::string texture;
+
+	//Time
+	float timer;
+	clock_t lastTime;
+	float deltaTime;
 public:
 	mtdl::Vector2 gridPosition;
 	mtdl::Rect position;

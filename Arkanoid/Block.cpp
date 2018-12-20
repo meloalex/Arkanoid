@@ -24,9 +24,14 @@ Block::Block(mtdl::Vector2 pos, BlockType t, int v)
 		break;
 	case BlockType::FIX:
 		spritePosition = mtdl::Rect(0, BLOCK_HEIGHT * 2, BLOCK_WIDTH, BLOCK_HEIGHT);
-		broken = -1;
+		broken = 10;
 		break;
 	}
+
+	//Time
+	timer = 0.2;
+	deltaTime = 0;
+	lastTime = clock();
 }
 
 Block::~Block()
@@ -35,21 +40,40 @@ Block::~Block()
 
 void Block::Update(Ball &ball, Player &playerOne, Player &playerTwo)
 {
-	if (mtdl::RectRectCollision(ball.position, colPosition) && type != BlockType::FIX && broken > 0) {
-		broken--;
+	if (mtdl::RectRectCollision(ball.position, colPosition) && broken > 0) {
 		ball.PlayerBounce();
 
-		if (broken == 0) {
-			DestroyBlock();
-			switch (ball.lastPlayer) {
-			case 1:
-				playerOne.AddPoints(value);
-				break;
-			case 2:
-				playerTwo.AddPoints(value);
-				break;
-			default:
-				break;
+		if (type != BlockType::FIX)
+		{
+			broken--;
+
+			if (broken == 0) {
+				//Anim
+				deltaTime = (clock() - lastTime);
+				lastTime = clock();
+				deltaTime /= CLOCKS_PER_SEC;
+				timer -= deltaTime;
+
+				if (timer < 0.0)
+				{
+					timer = 0.2;
+					deltaTime = 0;
+					lastTime = clock();
+					std::cout << "Tiempo\n";
+					if (spritePosition.position.x != Renderer::Instance()->GetTextureSize("bricks").x - BLOCK_WIDTH) spritePosition.position.x += BLOCK_WIDTH;
+					else DestroyBlock();
+				}
+
+				switch (ball.lastPlayer) {
+				case 1:
+					playerOne.AddPoints(value);
+					break;
+				case 2:
+					playerTwo.AddPoints(value);
+					break;
+				default:
+					break;
+				}
 			}
 		}
 	}
@@ -57,11 +81,10 @@ void Block::Update(Ball &ball, Player &playerOne, Player &playerTwo)
 
 void Block::Draw()
 {
-	if(broken != 0) Renderer::Instance()->PushRotatedSprite(texture, spritePosition, position, 90);
+	if (type != BlockType::NONE) Renderer::Instance()->PushRotatedSprite(texture, spritePosition, position, 90);
 }
 
 void Block::DestroyBlock()
 {
-	spritePosition.position.x += BLOCK_WIDTH;
-	spritePosition.position.y += BLOCK_HEIGHT;
+	type = BlockType::NONE;
 }
