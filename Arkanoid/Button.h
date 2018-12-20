@@ -12,7 +12,7 @@ private:
 
 public:
 	Button();
-	Button(std::string t, mtdl::Vector2 pos, mtdl::Color normal, mtdl::Color hovered);
+	Button(std::string t, mtdl::Vector2 pos, mtdl::Color normal, mtdl::Color hovered, std::string size);
 	void Update(mtdl::Vector2 mousePosition);
 	bool isPressed(mtdl::Vector2 mousePosition, bool p);
 	void Draw();

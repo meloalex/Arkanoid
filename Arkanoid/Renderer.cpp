@@ -29,7 +29,7 @@ Renderer::Renderer()
 
 	//Load font
 	LoadFont(mtdl::Font("../res/font/sunspire.ttf", 24, "sunspire24"));
-	LoadFont(mtdl::Font("../res/font/sunspire.ttf", 30, "sunspire30"));
+	LoadFont(mtdl::Font("../res/font/sunspire.ttf", 38, "sunspire38"));
 };
 
 
@@ -69,7 +69,6 @@ void Renderer::LoadTextureText(const std::string &fontId, mtdl::Text text) {
 	if (tmpSurf == nullptr) throw "Unable to create the SDL text surface";
 	SDL_Texture *texture{ SDL_CreateTextureFromSurface(m_renderer, tmpSurf) };
 	m_textureData[text.id] = texture;
-	
 };
 
 mtdl::Vector2 Renderer::GetTextureSize(const std::string &id) {

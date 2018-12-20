@@ -2,13 +2,23 @@
 #include "InputManager.h"
 #include "../dep/inc/mtdl/mtdl.h"
 
+struct SceneStatus
+{
+	bool finished;
+	int status;
+};
+
 class Scene
 {
+protected:
+	SceneStatus status;
 public:
-	bool sceneFinished = false;
+	
 	Scene();
 	~Scene();
 	virtual void Update(InputManager inputManager) = 0;
 	virtual void Draw() = 0;
+
+	SceneStatus GetStatus();
 };
 

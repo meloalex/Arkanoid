@@ -1,12 +1,6 @@
 ﻿  GameController.cpp
   Gameplay.cpp
-  main.cpp
-  Menu.cpp
-  Ranking.cpp
   Renderer.cpp
-  Scene.cpp
-  SplashScreen.cpp
-c:\users\alexe\source\repos\arkanoid\arkanoid\splashscreen.cpp(18): warning C4244: '=': conversion from 'clock_t' to 'float', possible loss of data
   Generating Code...
   Arkanoid.vcxproj -> C:\Users\alexe\source\repos\Arkanoid\\bin\Win32Debug\Arkanoid.exe
   0 archivo(s) copiado(s)

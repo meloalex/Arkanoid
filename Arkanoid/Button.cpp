@@ -4,10 +4,10 @@ Button::Button()
 {
 }
 
-Button::Button(std::string t, mtdl::Vector2 pos, mtdl::Color normal, mtdl::Color hovered)
+Button::Button(std::string t, mtdl::Vector2 pos, mtdl::Color normal, mtdl::Color hovered, std::string size)
 {
-	Renderer::Instance()->LoadTextureText("sunspire24", mtdl::Text(t, normal, t + "_button"));
-	Renderer::Instance()->LoadTextureText("sunspire24", mtdl::Text(t, hovered, t + "_button_hover"));
+	Renderer::Instance()->LoadTextureText("sunspire" + size, mtdl::Text(t, normal, t + "_button"));
+	Renderer::Instance()->LoadTextureText("sunspire" + size, mtdl::Text(t, hovered, t + "_button_hover"));
 	texture = t + "_button";
 	hoverTexture = t +"_button_hover";
 	mtdl::Vector2 wh = Renderer::Instance()->GetTextureSize(t + "_button");

@@ -1,6 +1,4 @@
 #include "GameController.h"
-#include "SplashScreen.h"
-#include "Menu.h"
 
 GameController::GameController()
 {
@@ -18,26 +16,51 @@ void GameController::Update() {
 	if (inputManager.input.quit) gameState = GameState::EXIT;
 
 	switch (gameState) {
-	case GameState::SPLASH_SCREEN:
-		if (currentScene->sceneFinished)
-		{
-			gameState = GameState::MENU;
-			delete(currentScene);
-			currentScene = new Menu();
-		}
-		break;
-	case GameState::EXIT:
-		isRunning = false;
-		break;
-	case GameState::MENU:
-		//goto splash screen;
-		break;
-	case GameState::GAMEPLAY:
-		//goto splash screen;
-		break;
-	case GameState::RANKING:
-		//goto splash screen;
-		break;
+
+		case GameState::SPLASH_SCREEN:
+			if (currentScene->GetStatus().finished)
+			{
+				gameState = GameState::MENU;
+				delete(currentScene);
+				currentScene = new Menu();
+			}
+			break;
+
+		case GameState::EXIT:
+			isRunning = false;
+			break;
+
+		case GameState::MENU:
+			if (currentScene->GetStatus().finished)
+			{
+				switch (currentScene->GetStatus().status)
+				{
+				case 0: //Play button pressed
+					gameState = GameState::GAMEPLAY;
+					delete(currentScene);
+					currentScene = new Gameplay();
+					break;
+
+				case 1: //Ranking button pressed
+					gameState = GameState::RANKING;
+					delete(currentScene);
+					currentScene = new Ranking();
+					break;
+
+				case 2: //Exit button pressed
+					gameState = GameState::EXIT;
+					break;
+				}
+			}
+			break;
+
+		case GameState::GAMEPLAY:
+			//goto splash screen;
+			break;
+
+		case GameState::RANKING:
+			//goto splash screen;
+			break;
 	}
 
 	inputManager.Update();

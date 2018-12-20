@@ -101,12 +101,4 @@ namespace mtdl {
 		return VectorRectCollision(r.position, t) || VectorRectCollision(topRight, t) || VectorRectCollision(botLeft, t) || VectorRectCollision(botRight, t);
 	}
 	#pragma endregion
-
-	#pragma region Conversions
-	/*SDL_Rect RectToSDLRect(Rect r) {
-		SDL_Rect retu{ r.position.x, r.position.y, r.w , r.h };
-		return retu;
-	}*/
-	#pragma endregion
-
 }

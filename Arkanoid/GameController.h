@@ -1,6 +1,10 @@
 #pragma once
 #include "InputManager.h"
 #include "Scene.h"
+#include "SplashScreen.h"
+#include "Menu.h"
+#include "Gameplay.h"
+#include "Ranking.h"
 
 class GameController
 {

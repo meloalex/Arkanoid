@@ -6,5 +6,8 @@ class Ranking :
 public:
 	Ranking();
 	~Ranking();
+
+	void Update(InputManager inputManager);
+	void Draw();
 };
 

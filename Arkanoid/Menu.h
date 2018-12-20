@@ -8,12 +8,14 @@ class Menu :
 {
 private:
 	std::string backgroundTexture;
+
 	Button* playButton;
 	Button* rankingButton;
 	Button* soundOffButton;
 	Button* soundOnButton;
 	Button* toggleSoundButton;
 	Button* exitButton;
+
 	bool sound;
 
 public:

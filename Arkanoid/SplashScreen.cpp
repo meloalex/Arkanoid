@@ -2,10 +2,14 @@
 
 SplashScreen::SplashScreen()
 {
+	//Get background image
 	backgroundTexture = "background_splashscreen";
+
+	//Time settings:
 	timer = 3;
 	deltaTime = 0;
 	lastTime = clock();
+
 	std::cout << "SplashScreen\n";
 }
 
@@ -23,7 +27,7 @@ void SplashScreen::Update(InputManager inputManager) {
 
 	if (timer < 0.0)
 	{
-		sceneFinished = true;
+		status.finished = true;
 	}
 }
 
