@@ -107,6 +107,20 @@ namespace mtdl {
 		return VectorRectCollision(r.position, t) || VectorRectCollision(topRight, t) || VectorRectCollision(botLeft, t) || VectorRectCollision(botRight, t);
 	}
 
+	inline bool RectRectHorizontalCollision(Rect r, Rect t) {
+		Vector2 topRight(r.position.x + r.w, r.position.y);
+		Vector2 botLeft(r.position.x, r.position.y + r.h);
+		Vector2 botRight(r.position.x + r.w, r.position.y + r.h);
+		return ((VectorRectCollision(topRight, t) || VectorRectCollision(r.position, t)) && !(VectorRectCollision(botLeft, t) || VectorRectCollision(botRight, t))) || (!(VectorRectCollision(topRight, t) || VectorRectCollision(r.position, t)) && (VectorRectCollision(botLeft, t) || VectorRectCollision(botRight, t)));
+	}
+
+	inline bool RectRectVerticalCollision(Rect r, Rect t) {
+		Vector2 topRight(r.position.x + r.w, r.position.y);
+		Vector2 botLeft(r.position.x, r.position.y + r.h);
+		Vector2 botRight(r.position.x + r.w, r.position.y + r.h);
+		return ((VectorRectCollision(topRight, t) || VectorRectCollision(botRight, t)) && !(VectorRectCollision(botLeft, t) || VectorRectCollision(r.position, t))) || (!(VectorRectCollision(topRight, t) || VectorRectCollision(botRight, t)) && (VectorRectCollision(botLeft, t) || VectorRectCollision(r.position, t)));
+	}
+
 	inline mtdl::Rect RotateRect90(Rect r) {
 		mtdl::Rect t;
 		t.position = r.position;
