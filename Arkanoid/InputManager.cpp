@@ -6,8 +6,12 @@ InputManager::InputManager()
 
 void InputManager::Update()
 {
+	if (event.key.keysym.sym == SDLK_ESCAPE) input.escPressed = false;
+	if (event.key.keysym.sym == SDLK_SPACE) input.spacePressed = false;
+	if (event.key.keysym.sym == SDLK_p) input.pPressed = false;
+	input.mousePressed = false;
+
 	while (SDL_PollEvent(&event)) {
-		input.mousePressed = false;
 		switch (event.type) {
 		case SDL_QUIT:
 			input.quit = true;
@@ -24,9 +28,6 @@ void InputManager::Update()
 			if(event.key.keysym.sym == SDLK_DOWN) input.downPressed = true;
 			break;
 		case SDL_KEYUP:
-			if (event.key.keysym.sym == SDLK_ESCAPE) input.escPressed = false;
-			if (event.key.keysym.sym == SDLK_SPACE) input.spacePressed = false;
-			if (event.key.keysym.sym == SDLK_p) input.pPressed = false;
 			if (event.key.keysym.sym == SDLK_w) input.wPressed = false;
 			if (event.key.keysym.sym == SDLK_s) input.sPressed = false;
 			if (event.key.keysym.sym == SDLK_UP) input.upPressed = false;

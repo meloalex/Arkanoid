@@ -52,7 +52,6 @@ private:
 	bool sound;
 
 public:
-	std::string backgroundTexture;
 	Ball ball;
 	Player playerOne;
 	Player playerTwo;

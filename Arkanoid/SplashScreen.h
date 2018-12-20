@@ -9,7 +9,6 @@ class SplashScreen :
 	public Scene
 {
 private:
-	std::string backgroundTexture;
 	float timer;
 	clock_t lastTime;
 	float deltaTime;

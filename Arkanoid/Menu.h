@@ -7,8 +7,6 @@ class Menu :
 	public Scene
 {
 private:
-	std::string backgroundTexture;
-
 	Button* playButton;
 	Button* rankingButton;
 	Button* soundOffButton;

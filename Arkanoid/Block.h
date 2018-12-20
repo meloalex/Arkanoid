@@ -28,6 +28,7 @@ public:
 	bool givesPowerUp;
 	int value;
 	int broken;
+	bool breakAnim;
 
 	Block(mtdl::Vector2 pos, BlockType type, int val);
 	~Block();

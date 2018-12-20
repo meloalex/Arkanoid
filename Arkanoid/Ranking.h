@@ -7,7 +7,6 @@ class Ranking :
 	public Scene
 {
 public:
-	std::string backgroundTexture;
 	Button* returnButton;
 
 	Ranking();

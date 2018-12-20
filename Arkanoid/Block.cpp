@@ -11,6 +11,7 @@ Block::Block(mtdl::Vector2 pos, BlockType t, int v)
 	texture = "bricks";
 	type = t;
 	value = v;
+	breakAnim = false;
 
 	switch (type)
 	{
@@ -40,29 +41,18 @@ Block::~Block()
 
 void Block::Update(Ball &ball, Player &playerOne, Player &playerTwo)
 {
-	if (mtdl::RectRectCollision(ball.position, colPosition) && broken > 0) {
+	if (mtdl::RectRectVerticalCollision(ball.position, colPosition) && broken > 0) {
 		ball.PlayerBounce();
-
-		if (type != BlockType::FIX)
-		{
+		switch (type) {
+		case BlockType::FIX:
+			if (spritePosition.position.x != Renderer::Instance()->GetTextureSize("bricks").x - BLOCK_WIDTH) spritePosition.position.x += BLOCK_WIDTH;
+			else spritePosition.position.x = 0;
+			break;
+		case BlockType::NORMAL:
 			broken--;
 
 			if (broken == 0) {
-				//Anim
-				deltaTime = (clock() - lastTime);
-				lastTime = clock();
-				deltaTime /= CLOCKS_PER_SEC;
-				timer -= deltaTime;
-
-				if (timer < 0.0)
-				{
-					timer = 0.2;
-					deltaTime = 0;
-					lastTime = clock();
-					std::cout << "Tiempo\n";
-					if (spritePosition.position.x != Renderer::Instance()->GetTextureSize("bricks").x - BLOCK_WIDTH) spritePosition.position.x += BLOCK_WIDTH;
-					else DestroyBlock();
-				}
+				breakAnim = true;
 
 				switch (ball.lastPlayer) {
 				case 1:
@@ -75,6 +65,95 @@ void Block::Update(Ball &ball, Player &playerOne, Player &playerTwo)
 					break;
 				}
 			}
+			break;
+		case BlockType::HEAVY:
+			broken--;
+			spritePosition.position.x += BLOCK_WIDTH;
+
+			if (broken == 0) {
+				breakAnim = true;
+
+				switch (ball.lastPlayer) {
+				case 1:
+					playerOne.AddPoints(value);
+					break;
+				case 2:
+					playerTwo.AddPoints(value);
+					break;
+				default:
+					break;
+				}
+			}
+			break;
+		default:
+			break;
+		}
+	}
+
+	if (mtdl::RectRectHorizontalCollision(ball.position, colPosition) && broken > 0) {
+		ball.WallBounce();
+		switch (type) {
+		case BlockType::FIX:
+			if (spritePosition.position.x != Renderer::Instance()->GetTextureSize("bricks").x - BLOCK_WIDTH) spritePosition.position.x += BLOCK_WIDTH;
+			else spritePosition.position.x = 0;
+			break;
+		case BlockType::NORMAL:
+			broken--;
+
+			if (broken == 0) {
+				breakAnim = true;
+
+				switch (ball.lastPlayer) {
+				case 1:
+					playerOne.AddPoints(value);
+					break;
+				case 2:
+					playerTwo.AddPoints(value);
+					break;
+				default:
+					break;
+				}
+			}
+			break;
+		case BlockType::HEAVY:
+			broken--;
+			spritePosition.position.x += BLOCK_WIDTH;
+
+			if (broken == 0) {
+				breakAnim = true;
+
+				switch (ball.lastPlayer) {
+				case 1:
+					playerOne.AddPoints(value);
+					break;
+				case 2:
+					playerTwo.AddPoints(value);
+					break;
+				default:
+					break;
+				}
+			}
+			break;
+		default:
+			break;
+		}
+	}
+
+	if (breakAnim) {
+		//Anim
+		deltaTime = (clock() - lastTime);
+		lastTime = clock();
+		deltaTime /= CLOCKS_PER_SEC;
+		timer -= deltaTime;
+
+		if (timer < 0.0)
+		{
+			timer = 0.2;
+			deltaTime = 0;
+			lastTime = clock();
+			std::cout << "Tiempo\n";
+			if (spritePosition.position.x != Renderer::Instance()->GetTextureSize("bricks").x - BLOCK_WIDTH) spritePosition.position.x += BLOCK_WIDTH;
+			else DestroyBlock();
 		}
 	}
 }

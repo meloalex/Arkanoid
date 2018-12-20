@@ -11,6 +11,7 @@ struct SceneStatus
 class Scene
 {
 protected:
+	std::string backgroundTexture;
 	SceneStatus status;
 public:
 	

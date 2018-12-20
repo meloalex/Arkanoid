@@ -146,6 +146,7 @@ void Gameplay::Update(InputManager inputManager) {
 
 	switch (gameplayState) {
 	case GameplayState::START_GAME:
+		if (playerOne.lives <= 0 || playerTwo.lives <= 0) gameplayState = GameplayState::GAME_OVER;
 		if (inputManager.input.escPressed) {
 			status.status = 0;
 			status.finished = true;
@@ -153,7 +154,6 @@ void Gameplay::Update(InputManager inputManager) {
 		if (inputManager.input.spacePressed) gameplayState = GameplayState::RUNNING;
 		break;
 	case GameplayState::RUNNING:
-		if(playerOne.lives <= 0 && playerTwo.lives <= 0) gameplayState = GameplayState::GAME_OVER;
 		if(inputManager.input.escPressed || inputManager.input.pPressed) gameplayState = GameplayState::PAUSED;
 
 		//Player
@@ -169,6 +169,8 @@ void Gameplay::Update(InputManager inputManager) {
 			playerOne.ResetPlayer(20);
 			playerTwo.ResetPlayer(SCREEN_WIDTH - 80);
 			playerTwo.lives--;
+			playerTwo.points -= 50;
+			playerOne.points += 100;
 			gameplayState = GameplayState::START_GAME;
 			break;
 		case 2:
@@ -176,6 +178,8 @@ void Gameplay::Update(InputManager inputManager) {
 			playerOne.ResetPlayer(20);
 			playerTwo.ResetPlayer(SCREEN_WIDTH - 80);
 			playerOne.lives--;
+			playerOne.points -= 50;
+			playerTwo.points += 100;
 			gameplayState = GameplayState::START_GAME;
 			break;
 		default:
@@ -210,6 +214,9 @@ void Gameplay::Update(InputManager inputManager) {
 	default:
 		break;
 	}
+
+	if (playerOne.points < 0) playerOne.points = 0;
+	if (playerTwo.points < 0) playerOne.points = 0;
 }
 
 void Gameplay::Draw() {

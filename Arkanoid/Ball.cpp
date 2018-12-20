@@ -27,13 +27,21 @@ int Ball::Update(mtdl::Rect f, mtdl::Rect p1, mtdl::Rect p2)
 		WallBounce();
 	}
 	else {
-		if (mtdl::RectRectCollision(position, p1)) {
+		if (mtdl::RectRectVerticalCollision(position, p1)) {
 			lastPlayer = 1;
 			PlayerBounce();
 		} 
-		else if (mtdl::RectRectCollision(position, p2)) {
+		else if (mtdl::RectRectHorizontalCollision(position, p1)) {
+			lastPlayer = 1;
+			WallBounce();
+		}
+		else if (mtdl::RectRectVerticalCollision(position, p2)) {
 			lastPlayer = 2;
 			PlayerBounce();
+		}
+		else if (mtdl::RectRectHorizontalCollision(position, p2)) {
+			lastPlayer = 2;
+			WallBounce();
 		}
 	}
 
