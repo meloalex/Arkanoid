@@ -16,7 +16,7 @@
         <Brick i="2" j="5" type="N"/>
         <Brick i="7" j="5" type="N"/>
         <Brick i="1" j="6" type="H"/>
-        <Brick i="11" j="6" type="N"/>
+        <Brick i="10" j="6" type="N"/>
         <Brick i="5" j="9" type="N"/>
         <Brick i="8" j="9" type="F"/>
         <Brick i="6" j="11" type="F"/>
