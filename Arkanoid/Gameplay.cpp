@@ -1,19 +1,49 @@
 #include "Gameplay.h"
 
-
-
 Gameplay::Gameplay()
 {
 	std::cout << "Gameplay\n";
+	status.finished = false;
 	gameplayState = GameplayState::START_GAME;
 
 	//Load background
 	backgroundTexture = "background_menu";
 
+	//Text Load
+	Renderer::Instance()->LoadTextureText("sunspire38", mtdl::Text("START GAME", mtdl::Color(255, 255, 255, 255), "start_game"));
+	startGameTextRect = mtdl::Rect(SCREEN_WIDTH / 2 - Renderer::Instance()->GetTextureSize("start_game").x / 2, 200, Renderer::Instance()->GetTextureSize("start_game"));
+	Renderer::Instance()->LoadTextureText("sunspire24", mtdl::Text("PRESS SPACE BAR", mtdl::Color(255, 255, 255, 255), "press_space"));
+	pressSpaceTextRect = mtdl::Rect(SCREEN_WIDTH / 2 - Renderer::Instance()->GetTextureSize("press_space").x / 2, 250, Renderer::Instance()->GetTextureSize("press_space"));
+	Renderer::Instance()->LoadTextureText("sunspire38", mtdl::Text("PAUSE", mtdl::Color(255, 255, 255, 255), "pause"));
+	pauseTextRect = mtdl::Rect(SCREEN_WIDTH / 2 - Renderer::Instance()->GetTextureSize("pause").x / 2, 200, Renderer::Instance()->GetTextureSize("pause"));
+	Renderer::Instance()->LoadTextureText("sunspire24", mtdl::Text("PL1:", mtdl::Color(255, 0, 0, 255), "pl1"));
+	pl1TextRect = mtdl::Rect(95, 510, Renderer::Instance()->GetTextureSize("pl1"));
+	Renderer::Instance()->LoadTextureText("sunspire24", mtdl::Text("PL2:", mtdl::Color(255, 0, 0, 255), "pl2"));
+	pl2TextRect = mtdl::Rect(475, 510, Renderer::Instance()->GetTextureSize("pl2"));
+
+	//Sound
+	soundOffButton = new Button("Sound Off", mtdl::Vector2(80, 400), mtdl::Color(255, 255, 255, 255), mtdl::Color(255, 0, 0, 255), "24");
+	soundOnButton = new Button("Sound On", mtdl::Vector2(80, 400), mtdl::Color(255, 255, 255, 255), mtdl::Color(255, 0, 0, 255), "24");
+	toggleSoundButton = soundOffButton;
+	sound = true;
+
 	//Instantiate elements
-	//ball = new Ball();
-	//playerOne = new Player();
-	//playerTwo = new Player();
+	field = mtdl::Rect(26 + BALL_WIDTH, 26 + BALL_HEIGHT, 747 - BALL_WIDTH * 2, 444 - BALL_HEIGHT * 2);
+	ball = Ball();
+	playerOne = Player(20);
+	for (int i = 0; i < playerOne.lives; i++) {
+		playerOneLives[i].position.x = 95 + i * 80;
+		playerOneLives[i].position.y = 550;
+		playerOneLives[i].h = PLAYER_WIDTH;
+		playerOneLives[i].w = PLAYER_HEIGHT;
+	}
+	playerTwo = Player(SCREEN_WIDTH - 80);
+	for (int i = 0; i < playerTwo.lives; i++) {
+		playerTwoLives[i].position.x = 475 + i * 80;
+		playerTwoLives[i].position.y = 550;
+		playerTwoLives[i].h = PLAYER_WIDTH;
+		playerTwoLives[i].w = PLAYER_HEIGHT;
+	}
 
 	//read xml ***/FALTA CONTROLAR ERROR /***
 	rapidxml::xml_document<> doc;
@@ -107,7 +137,79 @@ Gameplay::~Gameplay()
 }
 
 void Gameplay::Update(InputManager inputManager) {
+	std::string pl1Points = std::to_string(playerOne.points);
+	Renderer::Instance()->LoadTextureText("sunspire24", mtdl::Text(pl1Points, mtdl::Color(255, 0, 0, 255), "pl1Points"));
+	pl1PointsTextRect = mtdl::Rect(150, 510, Renderer::Instance()->GetTextureSize("pl1Points"));
+	std::string pl2Points = std::to_string(playerTwo.points);
+	Renderer::Instance()->LoadTextureText("sunspire24", mtdl::Text(pl2Points, mtdl::Color(255, 0, 0, 255), "pl2Points"));
+	pl2PointsTextRect = mtdl::Rect(540, 510, Renderer::Instance()->GetTextureSize("pl2Points"));
 
+	switch (gameplayState) {
+	case GameplayState::START_GAME:
+		if (inputManager.input.escPressed) {
+			status.status = 0;
+			status.finished = true;
+		}
+		if (inputManager.input.spacePressed) gameplayState = GameplayState::RUNNING;
+		break;
+	case GameplayState::RUNNING:
+		if(playerOne.lives <= 0 && playerTwo.lives <= 0) gameplayState = GameplayState::GAME_OVER;
+		if(inputManager.input.escPressed || inputManager.input.pPressed) gameplayState = GameplayState::PAUSED;
+
+		//Player
+		playerOne.Update(inputManager.input.wPressed, inputManager.input.sPressed);
+		playerTwo.Update(inputManager.input.upPressed, inputManager.input.downPressed);
+
+		//Ball
+		switch (ball.Update(field, playerOne.colPosition, playerTwo.colPosition)) {
+		case 0:
+			break;
+		case 1:
+			ball.ResetBall(SCREEN_WIDTH - 130, BALL_SPEED_X, BALL_SPEED_Y);
+			playerOne.ResetPlayer(20);
+			playerTwo.ResetPlayer(SCREEN_WIDTH - 80);
+			playerTwo.lives--;
+			gameplayState = GameplayState::START_GAME;
+			break;
+		case 2:
+			ball.ResetBall(70, BALL_SPEED_X*(-1), BALL_SPEED_Y*(-1));
+			playerOne.ResetPlayer(20);
+			playerTwo.ResetPlayer(SCREEN_WIDTH - 80);
+			playerOne.lives--;
+			gameplayState = GameplayState::START_GAME;
+			break;
+		default:
+			break;
+		}
+
+		//Blocks
+		for (std::vector<Block>::size_type i = 0; i != blocks.size(); i++) {
+			blocks[i].Update(ball, playerOne, playerTwo);
+		}
+		break;
+	case GameplayState::PAUSED:
+		if (inputManager.input.escPressed) {
+			status.status = 0;
+			status.finished = true;
+		}
+		if (inputManager.input.spacePressed) gameplayState = GameplayState::RUNNING;
+		if (sound && toggleSoundButton->isPressed(inputManager.input.mousePosition, inputManager.input.mousePressed)) {
+			sound = !sound;
+			toggleSoundButton = soundOnButton;
+		}
+		else if (toggleSoundButton->isPressed(inputManager.input.mousePosition, inputManager.input.mousePressed)) {
+			sound = !sound;
+			toggleSoundButton = soundOffButton;
+		}
+		toggleSoundButton->Update(inputManager.input.mousePosition);
+		break;
+	case GameplayState::GAME_OVER:
+		status.status = 0;
+		status.finished = true;
+		break;
+	default:
+		break;
+	}
 }
 
 void Gameplay::Draw() {
@@ -115,6 +217,44 @@ void Gameplay::Draw() {
 
 	//Push background texture
 	Renderer::Instance()->PushImage(backgroundTexture, mtdl::Rect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT));
+
+	//Players
+	playerOne.Draw();
+	playerTwo.Draw();
+	Renderer::Instance()->PushImage("pl1", pl1TextRect);
+	Renderer::Instance()->PushImage("pl2", pl2TextRect);
+	Renderer::Instance()->PushImage("pl1Points", pl1PointsTextRect);
+	Renderer::Instance()->PushImage("pl2Points", pl2PointsTextRect);
+	playerTwo.Draw();
+	for (int i = 0; i < playerOne.lives; i++) Renderer::Instance()->PushImage("player", playerOneLives[i]);
+	for (int i = 0; i < playerTwo.lives; i++) Renderer::Instance()->PushImage("player", playerTwoLives[i]);
+
+	//Ball
+	ball.Draw();
+
+	//Blocks
+	for (std::vector<Block>::size_type i = 0; i != blocks.size(); i++) {
+		blocks[i].Draw();
+	}
+
+	switch (gameplayState) {
+	case GameplayState::START_GAME:
+		Renderer::Instance()->PushImage("bTrans", mtdl::Rect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT));
+		Renderer::Instance()->PushImage("start_game", startGameTextRect);
+		Renderer::Instance()->PushImage("press_space", pressSpaceTextRect);
+		break;
+	case GameplayState::RUNNING:
+		break;
+	case GameplayState::PAUSED:
+		Renderer::Instance()->PushImage("bTrans", mtdl::Rect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT));
+		Renderer::Instance()->PushImage("pause", pauseTextRect);
+		toggleSoundButton->Draw();
+		break;
+	case GameplayState::GAME_OVER:
+		break;
+	default:
+		break;
+	}
 
 	Renderer::Instance()->Render();
 }

@@ -2,8 +2,10 @@
 #include "Scene.h"
 #include "Renderer.h"
 #include "Ball.h"
+#include "Button.h"
 #include "Player.h"
 #include "Block.h"
+#include "../dep/inc/mtdl/mtdl.h"
 
 #include <iostream>
 #include <sstream>
@@ -33,6 +35,22 @@ private:
 	GameplayState gameplayState;
 	BlockConfig blockConfig;
 	std::vector<Block> blocks;
+	mtdl::Rect field;
+	mtdl::Rect playerOneLives[3];
+	mtdl::Rect playerTwoLives[3];
+	mtdl::Rect startGameTextRect;
+	mtdl::Rect pressSpaceTextRect;
+	mtdl::Rect pauseTextRect;
+	mtdl::Rect pl1TextRect;
+	mtdl::Rect pl1PointsTextRect;
+	mtdl::Rect pl2TextRect;
+	mtdl::Rect pl2PointsTextRect;
+
+	Button* soundOffButton;
+	Button* soundOnButton;
+	Button* toggleSoundButton;
+	bool sound;
+
 public:
 	std::string backgroundTexture;
 	Ball ball;

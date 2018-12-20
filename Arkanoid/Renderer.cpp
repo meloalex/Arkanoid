@@ -23,17 +23,17 @@ Renderer::Renderer()
 	// ---- TTF ----
 	if (TTF_Init() != 0) throw"No es pot inicialitzar SDL_ttf";
 
+	//Load font
+	LoadFont(mtdl::Font("../res/font/sunspire.ttf", 24, "sunspire24"));
+	LoadFont(mtdl::Font("../res/font/sunspire.ttf", 38, "sunspire38"));
+
 	//Load textures
 	LoadTexture("background_splashscreen", "../res/img/background_splashscreen.png");
 	LoadTexture("background_menu", "../res/img/Background.jpg");
 	LoadTexture("player", "../res/img/platform.png");
 	LoadTexture("ball", "../res/img/ball.png");
 	LoadTexture("bTrans", "../res/img/bTrans.png");
-	LoadTexture("bricks", "../res/img/bricks.jpg");
-
-	//Load font
-	LoadFont(mtdl::Font("../res/font/sunspire.ttf", 24, "sunspire24"));
-	LoadFont(mtdl::Font("../res/font/sunspire.ttf", 38, "sunspire38"));
+	LoadTexture("bricks", "../res/img/bricks.jpg");	
 };
 
 
@@ -85,15 +85,20 @@ void Renderer::PushImage(const std::string &id, const mtdl::Rect &rect) {
 	SDL_Rect rectangle{ rect.position.x, rect.position.y, rect.w , rect.h };
 
 	SDL_RenderCopy(m_renderer, m_textureData[id], nullptr, &rectangle);
-};
-
-void Renderer::PushSprite(const std::string &id, const SDL_Rect &rectSprite,const SDL_Rect &rectPos) {
-	SDL_RenderCopy(m_renderer, m_textureData[id], &rectSprite, &rectPos);
 }
 
-void Renderer::PushRotatedSprite(const std::string & id, const SDL_Rect & rectSprite, const SDL_Rect & rectPos, float angle){
+void Renderer::PushSprite(const std::string &id, const mtdl::Rect &rectSprite, const mtdl::Rect &rectPos) {
+	SDL_Rect rectangleSprite{ rectSprite.position.x, rectSprite.position.y, rectSprite.w , rectSprite.h };
+	SDL_Rect rectanglePos{ rectPos.position.x, rectPos.position.y, rectPos.w , rectPos.h };
+
+	SDL_RenderCopy(m_renderer, m_textureData[id], &rectangleSprite, &rectanglePos);
+}
+
+void Renderer::PushRotatedSprite(const std::string & id, const mtdl::Rect &rectSprite, const mtdl::Rect &rectPos, float angle){
+	SDL_Rect rectangleSprite{ rectSprite.position.x, rectSprite.position.y, rectSprite.w , rectSprite.h };
+	SDL_Rect rectanglePos{ rectPos.position.x, rectPos.position.y, rectPos.w , rectPos.h };
 	SDL_Point center = { rectPos.w / 2, rectPos.h / 2 };
-	SDL_RenderCopyEx(m_renderer, m_textureData[id], &rectSprite, &rectPos, angle, &center, SDL_FLIP_NONE);
+	SDL_RenderCopyEx(m_renderer, m_textureData[id], &rectangleSprite, &rectanglePos, angle, &center, SDL_FLIP_NONE);
 }
 
 void Renderer::SetRendreDrawColor(int r, int g, int b)

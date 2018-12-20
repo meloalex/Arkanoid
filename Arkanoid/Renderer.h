@@ -34,8 +34,8 @@ public:
 	 void LoadTextureText(const std::string &fontId, mtdl::Text text);
 	 mtdl::Vector2 GetTextureSize(const std::string &id);
 	 void PushImage(const std::string &id,const mtdl::Rect &rect);
-	 void PushSprite(const std::string &id,const SDL_Rect &rectSprite,const SDL_Rect &rectPos);
-	 void PushRotatedSprite(const std::string &id, const SDL_Rect &rectSprite, const SDL_Rect &rectPos, float angle);
+	 void PushSprite(const std::string &id, const mtdl::Rect &rectSprite, const mtdl::Rect &rectPos);
+	 void PushRotatedSprite(const std::string & id, const mtdl::Rect &rectSprite, const mtdl::Rect &rectPos, float angle);
 	 void SetRendreDrawColor(int r, int g, int b);	 
 };
 

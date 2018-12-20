@@ -11,6 +11,7 @@ Menu::Menu()
 	toggleSoundButton = soundOffButton;
 	exitButton = new Button("Exit", mtdl::Vector2(80, 200), mtdl::Color(255, 255, 255, 255), mtdl::Color(255, 0, 0, 255), "38");
 
+	status.finished = false;
 	sound = true;
 	backgroundTexture = "background_menu";
 }

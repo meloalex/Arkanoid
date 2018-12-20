@@ -6,15 +6,8 @@ InputManager::InputManager()
 
 void InputManager::Update()
 {
-	input.escPressed = false;
-	input.spacePressed = false;
-	input.pPressed = false;
-	input.wPressed = false;
-	input.sPressed = false;
-	input.upPressed = false;
-	input.downPressed = false;
-	input.mousePressed = false;
 	while (SDL_PollEvent(&event)) {
+		input.mousePressed = false;
 		switch (event.type) {
 		case SDL_QUIT:
 			input.quit = true;
@@ -29,6 +22,15 @@ void InputManager::Update()
 			if(event.key.keysym.sym == SDLK_s) input.sPressed = true;
 			if(event.key.keysym.sym == SDLK_UP) input.upPressed = true;
 			if(event.key.keysym.sym == SDLK_DOWN) input.downPressed = true;
+			break;
+		case SDL_KEYUP:
+			if (event.key.keysym.sym == SDLK_ESCAPE) input.escPressed = false;
+			if (event.key.keysym.sym == SDLK_SPACE) input.spacePressed = false;
+			if (event.key.keysym.sym == SDLK_p) input.pPressed = false;
+			if (event.key.keysym.sym == SDLK_w) input.wPressed = false;
+			if (event.key.keysym.sym == SDLK_s) input.sPressed = false;
+			if (event.key.keysym.sym == SDLK_UP) input.upPressed = false;
+			if (event.key.keysym.sym == SDLK_DOWN) input.downPressed = false;
 			break;
 		case SDL_MOUSEMOTION:
 			input.mousePosition.x = event.motion.x;

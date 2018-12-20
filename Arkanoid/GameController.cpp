@@ -55,7 +55,27 @@ void GameController::Update() {
 			break;
 
 		case GameState::GAMEPLAY:
-			//goto splash screen;
+			if (currentScene->GetStatus().finished)
+			{
+				switch (currentScene->GetStatus().status)
+				{
+				case 0: //Play button pressed
+					gameState = GameState::MENU;
+					delete(currentScene);
+					currentScene = new Menu();
+					break;
+
+				case 1: //Ranking button pressed
+					gameState = GameState::RANKING;
+					delete(currentScene);
+					currentScene = new Ranking();
+					break;
+
+				case 2: //Exit button pressed
+					gameState = GameState::EXIT;
+					break;
+				}
+			}
 			break;
 
 		case GameState::RANKING:
