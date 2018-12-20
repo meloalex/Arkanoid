@@ -79,7 +79,17 @@ void GameController::Update() {
 			break;
 
 		case GameState::RANKING:
-			//goto splash screen;
+			if (currentScene->GetStatus().finished)
+			{
+				switch (currentScene->GetStatus().status)
+				{
+				case 0: //back button pressed
+					gameState = GameState::MENU;
+					delete(currentScene);
+					currentScene = new Menu();
+					break;
+				}
+			}
 			break;
 	}
 
