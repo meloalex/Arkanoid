@@ -4,7 +4,7 @@ Gameplay::Gameplay()
 {
 	std::cout << "Gameplay\n";
 	status.finished = false;
-	gameplayState = GameplayState::START_GAME;
+	gameplayState = GameplayState::START_GAME; 
 
 	//Load background
 	backgroundTexture = "background_menu";
@@ -45,89 +45,93 @@ Gameplay::Gameplay()
 		playerTwoLives[i].w = PLAYER_HEIGHT;
 	}
 
-	//read xml ***/FALTA CONTROLAR ERROR /***
-	rapidxml::xml_document<> doc;
-	std::ifstream file("../res/files/config.xml");
-	std::stringstream buffer;
-	buffer << file.rdbuf();
-	file.close();
-	std::string content(buffer.str());
-	doc.parse<0>(&content[0]);
+	//read xml
+	try {
+		rapidxml::xml_document<> doc;
+		std::ifstream file("../res/files/config.xml");
+		std::stringstream buffer;
+		buffer << file.rdbuf();
+		file.close();
+		std::string content(buffer.str());
+		doc.parse<0>(&content[0]);
 
-	rapidxml::xml_node<> *pRoot = doc.first_node();
-	
-	//Get general information
-	rapidxml::xml_node<> *pBrickInfo = pRoot->first_node("BrickInfo");
-	
-	//Read and store min/max values for Normal and Heavy blocks
-	for (rapidxml::xml_node<> *pNode = pBrickInfo->first_node(); pNode; pNode = pNode->next_sibling()) {
-		std::string node = pNode->name();
-		rapidxml::xml_attribute<> *pAttr = pNode->first_attribute();
+		rapidxml::xml_node<> *pRoot = doc.first_node();
 
-		if (node.compare("Normal") == 0) {
-			//Normal
-			blockConfig.normalMin = std::stoi(pAttr->value()); //Reads normal min value
-			pAttr = pAttr->next_attribute(); //Changes to next attribute
-			blockConfig.normalMax = std::stoi(pAttr->value()); //Reads normal max value
-		}
-		else if (node.compare("Heavy") == 0) {
-			//Heavy
-			blockConfig.heavyMin = std::stoi(pAttr->value()); //Reads heavy min value
-			pAttr = pAttr->next_attribute(); //Changes to next attribute
-			blockConfig.heavyMax = std::stoi(pAttr->value()); //Reads heavy max value
-		}
-	}
+		//Get general information
+		rapidxml::xml_node<> *pBrickInfo = pRoot->first_node("BrickInfo");
 
-	//generate blocks	
-	for (rapidxml::xml_node<> *pNode = pRoot->first_node("Level")->first_node(); pNode; pNode = pNode->next_sibling()) {
+		//Read and store min/max values for Normal and Heavy blocks
+		for (rapidxml::xml_node<> *pNode = pBrickInfo->first_node(); pNode; pNode = pNode->next_sibling()) {
+			std::string node = pNode->name();
+			rapidxml::xml_attribute<> *pAttr = pNode->first_attribute();
 
-		for (rapidxml::xml_attribute<> *pAttr = pNode->first_attribute(); pAttr; pAttr = pAttr->next_attribute()) {
-			//Get name for comparison
-			std::string attr = pAttr->name();
-
-			//Vars to store info
-			mtdl::Vector2 pos;
-			BlockType type = BlockType::NONE;
-			int val = 0;
-
-			if (attr.compare("i") == 0)
-			{
-				pos.x = std::stoi(pAttr->value());
+			if (node.compare("Normal") == 0) {
+				//Normal
+				blockConfig.normalMin = std::stoi(pAttr->value()); //Reads normal min value
+				pAttr = pAttr->next_attribute(); //Changes to next attribute
+				blockConfig.normalMax = std::stoi(pAttr->value()); //Reads normal max value
 			}
-			else if (attr.compare("j") == 0)
-			{
-				pos.y = std::stoi(pAttr->value());
-			}
-			else
-			{
-				std::string typeName = pAttr->value();
-
-				if (typeName.compare("N") == 0)
-				{
-					type = BlockType::NORMAL;
-				}
-				else if (typeName.compare("H") == 0)
-				{
-					type = BlockType::HEAVY;
-				}
-				else if (typeName.compare("F") == 0)
-				{
-					type = BlockType::FIX;
-				}
-
-				/* initialize random seed: */
-				srand(time(NULL));
-
-				//Generate random value
-				if (type == BlockType::NORMAL)
-					val = rand() % blockConfig.normalMax + blockConfig.normalMax;
-				else if (type == BlockType::HEAVY)
-					val = rand() % blockConfig.heavyMax + blockConfig.heavyMax;
-
-				//Add block
-				blocks.push_back(Block(pos, type, val));
+			else if (node.compare("Heavy") == 0) {
+				//Heavy
+				blockConfig.heavyMin = std::stoi(pAttr->value()); //Reads heavy min value
+				pAttr = pAttr->next_attribute(); //Changes to next attribute
+				blockConfig.heavyMax = std::stoi(pAttr->value()); //Reads heavy max value
 			}
 		}
+
+		//generate blocks	
+		for (rapidxml::xml_node<> *pNode = pRoot->first_node("Level")->first_node(); pNode; pNode = pNode->next_sibling()) {
+
+			for (rapidxml::xml_attribute<> *pAttr = pNode->first_attribute(); pAttr; pAttr = pAttr->next_attribute()) {
+				//Get name for comparison
+				std::string attr = pAttr->name();
+
+				//Vars to store info
+				mtdl::Vector2 pos;
+				BlockType type = BlockType::NONE;
+				int val = 0;
+
+				if (attr.compare("i") == 0)
+				{
+					pos.x = std::stoi(pAttr->value());
+				}
+				else if (attr.compare("j") == 0)
+				{
+					pos.y = std::stoi(pAttr->value());
+				}
+				else
+				{
+					std::string typeName = pAttr->value();
+
+					if (typeName.compare("N") == 0)
+					{
+						type = BlockType::NORMAL;
+					}
+					else if (typeName.compare("H") == 0)
+					{
+						type = BlockType::HEAVY;
+					}
+					else if (typeName.compare("F") == 0)
+					{
+						type = BlockType::FIX;
+					}
+
+					/* initialize random seed: */
+					srand(time(NULL));
+
+					//Generate random value
+					if (type == BlockType::NORMAL)
+						val = rand() % blockConfig.normalMax + blockConfig.normalMax;
+					else if (type == BlockType::HEAVY)
+						val = rand() % blockConfig.heavyMax + blockConfig.heavyMax;
+
+					//Add block
+					blocks.push_back(Block(pos, type, val));
+				}
+			}
+		}
+	} 	catch (std::exception e) {
+		std::cout << e.what() << std::endl;
 	}
 }
 
@@ -208,6 +212,12 @@ void Gameplay::Update(InputManager inputManager) {
 		toggleSoundButton->Update(inputManager.input.mousePosition);
 		break;
 	case GameplayState::GAME_OVER:
+		//ask for user input
+		
+		//Save
+		LoadRanking();
+		Save("Heya", 1000);
+
 		status.status = 0;
 		status.finished = true;
 		break;
@@ -264,4 +274,102 @@ void Gameplay::Draw() {
 	}
 
 	Renderer::Instance()->Render();
+}
+
+void Gameplay::Save(std::string name, int score) {
+	try
+	{
+		//Check if player made it to the to 10
+		
+		//Check if he made it
+		//Iterate through vector, if score of player in position is less, then add new player in this pos.
+		for (int i = 0; i < 10; i++)
+		{
+			if (ranking[i].score < score)
+			{
+				ranking.insert(ranking.begin() + i, mtdl::PlayerRanking(name, score));
+				break;
+			}
+		}
+		
+		std::cout << "______________________________________________" << std::endl;
+
+		for (int i = 0; i < 10; i++)
+		{
+			std::cout << i << "  -  " << ranking[i].name << "  " << ranking[i].score << std::endl;
+		}
+
+		//save ranking
+		
+		//Open file
+		std::ofstream fexit("../res/files/ranking.bin", std::ios::out | std::ios::binary);
+		
+		int stringSize = 10;
+		
+		//Write to file
+		for (int i = 0; i < 10; i++)
+		{
+			//convert string to char arr
+			char nameC[10];
+			strcpy(nameC, ranking[i].name.c_str());
+
+			//Store string lenght
+			fexit.write(reinterpret_cast<char*>(&stringSize), sizeof(stringSize));
+
+			//Store name
+			fexit.write(nameC, sizeof(nameC));
+
+			//Store score
+			fexit.write(reinterpret_cast<char*>(&ranking[i].score), sizeof(ranking[i].score));
+		}
+		
+		fexit.close();
+	}
+	catch (const std::exception& e)
+	{
+		std::cout << e.what() << std::endl;
+	}
+}
+
+void Gameplay::LoadRanking() {
+
+	ranking.clear();
+
+	try
+	{
+		//Open file
+		std::ifstream rankingFile("../res/files/ranking.bin", std::ios::in | std::ios::binary);
+
+		//Read
+		for (int i = 0; i < 10; i++)
+		{
+			mtdl::PlayerRanking* p = new mtdl::PlayerRanking();
+
+			//Read Name
+			size_t len;
+			rankingFile.read(reinterpret_cast<char*>(&len), sizeof(size_t)); //read string size
+			char* tmp = new char[len + 1]; //create char array of string size
+			rankingFile.read(tmp, len); //read string
+			tmp[len] = '\0'; //add end in last pos
+			p->name = tmp; //save info into player
+			delete[]tmp; //free memory
+
+			//Read score
+			rankingFile.read(reinterpret_cast<char*>(&p->score), sizeof(p->score));
+
+			//Add player to vector
+			ranking.push_back(*p);
+
+			delete(p);
+		}
+	}
+	catch (const std::exception& e)
+	{
+		std::cout << e.what() << std::endl;
+	}
+
+	for (int i = 0; i < ranking.size() ; i++)
+	{
+		std::cout << i << "  -  " << ranking[i].name << "  " << ranking[i].score << std::endl;
+	}
 }

@@ -9,6 +9,7 @@
 
 #include <iostream>
 #include <sstream>
+#include <fstream>
 #include <string>
 #include <vector>
 #include <stdio.h>
@@ -51,6 +52,7 @@ private:
 	Button* toggleSoundButton;
 	bool sound;
 
+	std::vector<mtdl::PlayerRanking> ranking;
 public:
 	Ball ball;
 	Player playerOne;
@@ -61,5 +63,7 @@ public:
 
 	void Update(InputManager inputManager);
 	void Draw();
+	void Save(std::string name, int score);
+	void LoadRanking();
 };
 

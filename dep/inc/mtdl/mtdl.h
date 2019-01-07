@@ -92,6 +92,18 @@ namespace mtdl {
 			id = _id;
 		}
 	};
+
+	struct PlayerRanking
+	{
+		std::string name;
+		int score;
+
+		PlayerRanking() {};
+		PlayerRanking(std::string n, int s) {
+			name = n;
+			score = s;
+		}
+	};
 	#pragma endregion
 
 	/*---FUNCTIONS---*/
