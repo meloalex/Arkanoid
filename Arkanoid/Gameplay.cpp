@@ -4,7 +4,7 @@ Gameplay::Gameplay()
 {
 	std::cout << "Gameplay\n";
 	status.finished = false;
-	gameplayState = GameplayState::START_GAME; 
+	gameplayState = GameplayState::GAME_OVER; 
 
 	//Load background
 	backgroundTexture = "background_menu";
@@ -135,7 +135,6 @@ Gameplay::Gameplay()
 	}
 }
 
-
 Gameplay::~Gameplay()
 {
 }
@@ -216,7 +215,7 @@ void Gameplay::Update(InputManager inputManager) {
 		
 		//Save
 		LoadRanking();
-		Save("Heya", 1000);
+		Save("Alex", 1200); //pass as parameters name and score
 
 		status.status = 0;
 		status.finished = true;

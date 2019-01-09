@@ -16,6 +16,7 @@ class Ranking :
 {
 private:
 	std::vector<mtdl::PlayerRanking> ranking;
+	std::vector<mtdl::Rect*> rects;
 public:
 	Button* returnButton;
 
@@ -26,5 +27,6 @@ public:
 	void Draw();
 	void LoadRanking();
 	void Fill();
+	void DrawRanking();
 };
 

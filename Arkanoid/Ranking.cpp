@@ -4,7 +4,9 @@ Ranking::Ranking()
 {
 	backgroundTexture = "background_menu";
 	returnButton = new Button("Back", mtdl::Vector2(600, 400), mtdl::Color(255, 255, 255, 255), mtdl::Color(255, 0, 0, 255), "38");
+
 	LoadRanking();
+	DrawRanking();
 }
 
 
@@ -31,6 +33,14 @@ void Ranking::Draw() {
 	Renderer::Instance()->PushImage(backgroundTexture, mtdl::Rect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT));
 
 	returnButton->Draw();
+
+	// i = id, j = rect
+	for (int i = 0, j = 0; i < 10; i++, j +=3)
+	{
+		Renderer::Instance()->PushImage("num" + std::to_string(i), *rects[j]);
+		Renderer::Instance()->PushImage("player_name" + static_cast<char>(i), *rects[j + 1]);
+		Renderer::Instance()->PushImage("player_score" + static_cast<char>(i), *rects[j + 2]);
+	}
 
 	Renderer::Instance()->Render();
 }
@@ -85,4 +95,31 @@ void Ranking::Fill() {
 	}
 
 	fexit.close();
+}
+
+void Ranking::DrawRanking() {
+	mtdl::Rect* r;
+	int x = 100, y = 50;
+	int numOffset = 20, scoreOffset = 50;
+
+	for (int i = 0; i < 10; i++)
+	{
+		
+		//Number
+		Renderer::Instance()->LoadTextureText("sunspire38", mtdl::Text(std::to_string(i + 1), mtdl::Color(255, 255, 255, 255), "num" + std::to_string(i)));
+		r = new mtdl::Rect(x - Renderer::Instance()->GetTextureSize("num" + std::to_string(i)).x - numOffset, y, Renderer::Instance()->GetTextureSize("num" + std::to_string(i)));
+		rects.push_back(r);
+		
+		//Name
+		Renderer::Instance()->LoadTextureText("sunspire38", mtdl::Text(ranking[i].name, mtdl::Color(255, 255, 255, 255), "player_name" + static_cast<char>(i)));
+		r = new mtdl::Rect(x, y, Renderer::Instance()->GetTextureSize("player_name" + static_cast<char>(i)));
+		rects.push_back(r);
+
+		//Score
+		Renderer::Instance()->LoadTextureText("sunspire38", mtdl::Text(std::to_string(ranking[i].score), mtdl::Color(255, 255, 255, 255), "player_score" + static_cast<char>(i)));
+		r = new mtdl::Rect(x + Renderer::Instance()->GetTextureSize("player_score" + static_cast<char>(i)).x + scoreOffset, y, Renderer::Instance()->GetTextureSize("player_score" + static_cast<char>(i)));
+		rects.push_back(r);
+		
+		y += Renderer::Instance()->GetTextureSize("player_name" + static_cast<char>(i)).y;
+	}
 }
