@@ -104,6 +104,17 @@ namespace mtdl {
 			score = s;
 		}
 	};
+
+	struct AudioFile
+	{
+		std::string name;
+		std::string path;
+
+		AudioFile(std::string n, std::string p) {
+			name = n;
+			path = p;
+		}
+	};
 	#pragma endregion
 
 	/*---FUNCTIONS---*/

@@ -2,6 +2,7 @@
 #include "Scene.h"
 #include "Button.h"
 #include <iostream>
+#include "AudioManager.h"
 
 class Menu :
 	public Scene

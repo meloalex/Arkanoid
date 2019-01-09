@@ -8,12 +8,16 @@ Menu::Menu()
 	rankingButton = new Button("Ranking", mtdl::Vector2(80, 100), mtdl::Color(255, 255, 255, 255), mtdl::Color(255, 0, 0, 255), "38");
 	soundOffButton = new Button("Sound Off", mtdl::Vector2(80, 150), mtdl::Color(255, 255, 255, 255), mtdl::Color(255, 0, 0, 255), "38");
 	soundOnButton = new Button("Sound On", mtdl::Vector2(80, 150), mtdl::Color(255, 255, 255, 255), mtdl::Color(255, 0, 0, 255), "38");
-	toggleSoundButton = soundOffButton;
 	exitButton = new Button("Exit", mtdl::Vector2(80, 200), mtdl::Color(255, 255, 255, 255), mtdl::Color(255, 0, 0, 255), "38");
 
 	status.finished = false;
-	sound = true;
 	backgroundTexture = "background_menu";
+
+	//Audio
+	toggleSoundButton = soundOnButton;
+	sound = true;
+
+	if (!AudioManager::Instance()->audioOn) { AudioManager::Instance()->StartAudio("main_theme", 50, -1); };	
 }
 
 Menu::~Menu()
@@ -37,11 +41,13 @@ void Menu::Update(InputManager inputManager) {
 	//Sound On/Off
 	if (sound && toggleSoundButton->isPressed(inputManager.input.mousePosition, inputManager.input.mousePressed)) {
 		sound = !sound;
-		toggleSoundButton = soundOnButton;
+		toggleSoundButton = soundOffButton;
+		AudioManager::Instance()->PauseAudio();
 	}
 	else if (toggleSoundButton->isPressed(inputManager.input.mousePosition, inputManager.input.mousePressed)) {
 		sound = !sound;
-		toggleSoundButton = soundOffButton;
+		toggleSoundButton = soundOnButton;
+		AudioManager::Instance()->ResumeAudio();
 	}
 
 	//Play button

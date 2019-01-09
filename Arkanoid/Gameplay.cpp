@@ -4,7 +4,7 @@ Gameplay::Gameplay()
 {
 	std::cout << "Gameplay\n";
 	status.finished = false;
-	gameplayState = GameplayState::GAME_OVER; 
+	gameplayState = GameplayState::START_GAME; 
 
 	//Load background
 	backgroundTexture = "background_menu";
