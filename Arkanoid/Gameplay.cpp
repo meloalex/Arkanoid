@@ -24,7 +24,7 @@ Gameplay::Gameplay()
 	//Sound
 	soundOffButton = new Button("Sound Off", mtdl::Vector2(80, 400), mtdl::Color(255, 255, 255, 255), mtdl::Color(255, 0, 0, 255), "24");
 	soundOnButton = new Button("Sound On", mtdl::Vector2(80, 400), mtdl::Color(255, 255, 255, 255), mtdl::Color(255, 0, 0, 255), "24");
-	toggleSoundButton = soundOffButton;
+	toggleSoundButton = soundOnButton;
 	sound = true;
 
 	//Instantiate elements
@@ -199,16 +199,23 @@ void Gameplay::Update(InputManager inputManager) {
 			status.status = 0;
 			status.finished = true;
 		}
+
 		if (inputManager.input.spacePressed) gameplayState = GameplayState::RUNNING;
+
 		if (sound && toggleSoundButton->isPressed(inputManager.input.mousePosition, inputManager.input.mousePressed)) {
 			sound = !sound;
-			toggleSoundButton = soundOnButton;
+			toggleSoundButton = soundOffButton;
+			AudioManager::Instance()->PauseAudio();
+			
 		}
 		else if (toggleSoundButton->isPressed(inputManager.input.mousePosition, inputManager.input.mousePressed)) {
 			sound = !sound;
-			toggleSoundButton = soundOffButton;
+			toggleSoundButton = soundOnButton;
+			AudioManager::Instance()->ResumeAudio();
 		}
+
 		toggleSoundButton->Update(inputManager.input.mousePosition);
+
 		break;
 	case GameplayState::GAME_OVER:
 		//ask for user input

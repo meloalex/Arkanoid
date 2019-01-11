@@ -32,6 +32,7 @@ Menu::~Menu()
 void Menu::Update(InputManager inputManager) {
 
 	//Update buttons
+
 	playButton->Update(inputManager.input.mousePosition);
 	rankingButton->Update(inputManager.input.mousePosition);
 	toggleSoundButton->Update(inputManager.input.mousePosition);

@@ -21,7 +21,6 @@ public:
 	void LoadAudio(mtdl::AudioFile a);
 	void PauseAudio();
 	void ResumeAudio();
-	void CheckIfAudioPlaying();
 	void StartAudio(std::string id, int vol, int loops);
 };
 

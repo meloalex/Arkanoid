@@ -6,6 +6,7 @@
 #include "Player.h"
 #include "Block.h"
 #include "../dep/inc/mtdl/mtdl.h"
+#include "AudioManager.h"
 
 #include <iostream>
 #include <sstream>
