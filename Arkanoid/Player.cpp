@@ -14,7 +14,9 @@ Player::Player(int _x)
 	colPosition = mtdl::RotateRect90(position);
 	colPosition.position.x += 20;
 	colPosition.position.y -= 20;
-	speed = 10;
+	colPositionStandar = colPosition;
+	speed = PLAYER_SPEED;
+	boost = Boost::NONE;
 }
 
 
@@ -24,6 +26,40 @@ Player::~Player()
 
 void Player::Update(bool _up, bool _down)
 {
+	switch (boost) {
+	case Boost::NONE:
+		position = mtdl::Rect(position.position.x, position.position.y, PLAYER_HEIGHT, PLAYER_WIDTH);
+		colPosition.h = colPositionStandar.h;
+		speed = PLAYER_SPEED;
+		break;
+	case Boost::EXTRALENGHT:
+		position = mtdl::Rect(position.position.x, position.position.y, PLAYER_HEIGHT*2, PLAYER_WIDTH);
+		colPosition.h = colPositionStandar.h*2;
+		speed = PLAYER_SPEED;
+		deltaTime = (clock() - lastTime);
+		lastTime = clock();
+		deltaTime /= CLOCKS_PER_SEC;
+		std::cout << timer << std::endl;
+		timer -= deltaTime;
+		if (timer < 0.0)
+		{
+			boost = Boost::NONE;
+		}
+		break;
+	case Boost::MINILENGHT:
+		position = mtdl::Rect(position.position.x, position.position.y, PLAYER_HEIGHT/2, PLAYER_WIDTH);
+		colPosition.h = colPositionStandar.h/2;
+		speed = PLAYER_SPEED;
+		break;
+	case Boost::SPEED:
+		position = mtdl::Rect(position.position.x, position.position.y, PLAYER_HEIGHT, PLAYER_WIDTH);
+		colPosition.h = colPositionStandar.h;
+		speed = PLAYER_SPEED * 2;
+		break;
+	default:
+		break;
+	}
+
 	if (_up && !_down) {
 		if (position.position.y >= 48) {
 			position.position.y -= speed;
@@ -36,7 +72,6 @@ void Player::Update(bool _up, bool _down)
 			colPosition.position.y += speed;
 		}
 	}
-
 }
 
 void Player::Draw()

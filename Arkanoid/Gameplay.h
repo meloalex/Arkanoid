@@ -4,9 +4,9 @@
 #include "Ball.h"
 #include "Button.h"
 #include "Player.h"
+#include "PowerUp.h"
 #include "Block.h"
 #include "../dep/inc/mtdl/mtdl.h"
-#include "AudioManager.h"
 
 #include <iostream>
 #include <sstream>
@@ -37,6 +37,7 @@ private:
 	GameplayState gameplayState;
 	BlockConfig blockConfig;
 	std::vector<Block> blocks;
+	std::vector<PowerUp> powerUps;
 	mtdl::Rect field;
 	mtdl::Rect playerOneLives[3];
 	mtdl::Rect playerTwoLives[3];

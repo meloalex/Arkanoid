@@ -24,7 +24,7 @@ Gameplay::Gameplay()
 	//Sound
 	soundOffButton = new Button("Sound Off", mtdl::Vector2(80, 400), mtdl::Color(255, 255, 255, 255), mtdl::Color(255, 0, 0, 255), "24");
 	soundOnButton = new Button("Sound On", mtdl::Vector2(80, 400), mtdl::Color(255, 255, 255, 255), mtdl::Color(255, 0, 0, 255), "24");
-	toggleSoundButton = soundOnButton;
+	toggleSoundButton = soundOffButton;
 	sound = true;
 
 	//Instantiate elements
@@ -189,33 +189,67 @@ void Gameplay::Update(InputManager inputManager) {
 			break;
 		}
 
-		//Blocks
+		//Blocks & PowerUps
 		for (std::vector<Block>::size_type i = 0; i != blocks.size(); i++) {
-			blocks[i].Update(ball, playerOne, playerTwo);
+			int random(-1);
+			switch (blocks[i].Update(ball, playerOne, playerTwo)) {
+			case 0:
+				break;
+			case 1:
+				random = rand() % 5;
+				if(random == 0)
+					powerUps.push_back(PowerUp(-2, blocks[i].position.position));
+				break;
+			case 2:
+				random = rand() % 5;
+				if (random == 0)
+					powerUps.push_back(PowerUp(2, blocks[i].position.position));
+				break;
+			default:
+				break;
+			}
 		}
+		for (std::vector<PowerUp>::size_type i = 0; i != powerUps.size(); i++) {
+			switch (powerUps[i].Update(playerOne.colPosition, playerTwo.colPosition)) {
+			case 0:
+				break;
+			case 1:
+				powerUps.erase(powerUps.begin() + i);
+				i--;
+				break;
+			case 2:
+				playerOne.boost = static_cast<Player::Boost>(static_cast<int>(powerUps[i].type) + 1);
+				playerOne.timer = 10;
+				playerOne.deltaTime = 0;
+				playerOne.lastTime = clock();
+				break;
+			case 3:
+				playerTwo.boost = static_cast<Player::Boost>(static_cast<int>(powerUps[i].type) + 1);
+				playerTwo.timer = 10;
+				playerTwo.deltaTime = 0;
+				playerTwo.lastTime = clock();
+				break;
+			default:
+				break;
+			}
+		}
+
 		break;
 	case GameplayState::PAUSED:
 		if (inputManager.input.escPressed) {
 			status.status = 0;
 			status.finished = true;
 		}
-
 		if (inputManager.input.spacePressed) gameplayState = GameplayState::RUNNING;
-
 		if (sound && toggleSoundButton->isPressed(inputManager.input.mousePosition, inputManager.input.mousePressed)) {
 			sound = !sound;
-			toggleSoundButton = soundOffButton;
-			AudioManager::Instance()->PauseAudio();
-			
+			toggleSoundButton = soundOnButton;
 		}
 		else if (toggleSoundButton->isPressed(inputManager.input.mousePosition, inputManager.input.mousePressed)) {
 			sound = !sound;
-			toggleSoundButton = soundOnButton;
-			AudioManager::Instance()->ResumeAudio();
+			toggleSoundButton = soundOffButton;
 		}
-
 		toggleSoundButton->Update(inputManager.input.mousePosition);
-
 		break;
 	case GameplayState::GAME_OVER:
 		//ask for user input
@@ -255,9 +289,12 @@ void Gameplay::Draw() {
 	//Ball
 	ball.Draw();
 
-	//Blocks
+	//Blocks & PowerUps
 	for (std::vector<Block>::size_type i = 0; i != blocks.size(); i++) {
 		blocks[i].Draw();
+	}
+	for (std::vector<PowerUp>::size_type i = 0; i != powerUps.size(); i++) {
+		powerUps[i].Draw();
 	}
 
 	switch (gameplayState) {

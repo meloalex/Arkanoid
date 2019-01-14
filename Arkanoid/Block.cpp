@@ -39,7 +39,7 @@ Block::~Block()
 {
 }
 
-void Block::Update(Ball &ball, Player &playerOne, Player &playerTwo)
+int Block::Update(Ball &ball, Player &playerOne, Player &playerTwo)
 {
 	if (mtdl::RectRectVerticalCollision(ball.position, colPosition) && broken > 0) {
 		ball.PlayerBounce();
@@ -53,13 +53,15 @@ void Block::Update(Ball &ball, Player &playerOne, Player &playerTwo)
 
 			if (broken == 0) {
 				breakAnim = true;
-
+				
 				switch (ball.lastPlayer) {
 				case 1:
 					playerOne.AddPoints(value);
+					return 1;
 					break;
 				case 2:
 					playerTwo.AddPoints(value);
+					return 2;
 					break;
 				default:
 					break;
@@ -76,9 +78,11 @@ void Block::Update(Ball &ball, Player &playerOne, Player &playerTwo)
 				switch (ball.lastPlayer) {
 				case 1:
 					playerOne.AddPoints(value);
+					return 1;
 					break;
 				case 2:
 					playerTwo.AddPoints(value);
+					return 2;
 					break;
 				default:
 					break;
@@ -88,6 +92,7 @@ void Block::Update(Ball &ball, Player &playerOne, Player &playerTwo)
 		default:
 			break;
 		}
+		return 0;
 	}
 
 	if (mtdl::RectRectHorizontalCollision(ball.position, colPosition) && broken > 0) {

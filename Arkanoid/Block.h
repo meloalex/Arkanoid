@@ -33,7 +33,7 @@ public:
 	Block(mtdl::Vector2 pos, BlockType type, int val);
 	~Block();
 
-	void Update(Ball &ball, Player &playerOne, Player &plaeyrTwo);
+	int Update(Ball &ball, Player &playerOne, Player &plaeyrTwo);
 	void Draw();
 	void DestroyBlock();
 };
