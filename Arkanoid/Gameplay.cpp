@@ -2,7 +2,7 @@
 
 Gameplay::Gameplay()
 {
-	std::cout << "Gameplay\n";
+	//std::cout << "Gameplay\n";
 	status.finished = false;
 	gameplayState = GameplayState::START_GAME; 
 
@@ -24,9 +24,13 @@ Gameplay::Gameplay()
 	//Sound
 	soundOffButton = new Button("Sound Off", mtdl::Vector2(80, 400), mtdl::Color(255, 255, 255, 255), mtdl::Color(255, 0, 0, 255), "24");
 	soundOnButton = new Button("Sound On", mtdl::Vector2(80, 400), mtdl::Color(255, 255, 255, 255), mtdl::Color(255, 0, 0, 255), "24");
-	toggleSoundButton = soundOffButton;
-	sound = true;
-
+	
+	sound = AudioManager::Instance()->audioOn;
+	if (sound)
+		toggleSoundButton = soundOnButton;
+	else
+		toggleSoundButton = soundOffButton;
+	
 	//Instantiate elements
 	field = mtdl::Rect(26 + BALL_WIDTH, 26 + BALL_HEIGHT, 747 - BALL_WIDTH * 2, 444 - BALL_HEIGHT * 2);
 	ball = Ball();
@@ -243,25 +247,29 @@ void Gameplay::Update(InputManager inputManager) {
 		if (inputManager.input.spacePressed) gameplayState = GameplayState::RUNNING;
 		if (sound && toggleSoundButton->isPressed(inputManager.input.mousePosition, inputManager.input.mousePressed)) {
 			sound = !sound;
-			toggleSoundButton = soundOnButton;
+			toggleSoundButton = soundOffButton;
+			AudioManager::Instance()->PauseAudio();
 		}
 		else if (toggleSoundButton->isPressed(inputManager.input.mousePosition, inputManager.input.mousePressed)) {
 			sound = !sound;
-			toggleSoundButton = soundOffButton;
+			toggleSoundButton = soundOnButton;
+			AudioManager::Instance()->ResumeAudio();
 		}
 		toggleSoundButton->Update(inputManager.input.mousePosition);
 		break;
 	case GameplayState::GAME_OVER:
 		//ask for user input
-		
-		//Save
-		LoadRanking();
-		Save("Alex", 1200); //pass as parameters name and score
+		std::string name;
+		std::cout << "Insert you name here: ";
+		std::cin >> name;
 
+		LoadRanking();
+
+		//Save
+		Save(name, playerOne.points > playerTwo.points ? playerOne.points : playerTwo.points);
+		
 		status.status = 0;
 		status.finished = true;
-		break;
-	default:
 		break;
 	}
 
@@ -326,20 +334,22 @@ void Gameplay::Save(std::string name, int score) {
 		
 		//Check if he made it
 		//Iterate through vector, if score of player in position is less, then add new player in this pos.
-		for (int i = 0; i < 10; i++)
+		for (int i = 0; i < ranking.size(); i++)
 		{
 			if (ranking[i].score < score)
 			{
 				ranking.insert(ranking.begin() + i, mtdl::PlayerRanking(name, score));
 				break;
 			}
+			else if (i == (ranking.size() - 1) && ranking.size() != 10) {
+				ranking.push_back(mtdl::PlayerRanking(name, score));
+				break;
+			}
 		}
 		
-		std::cout << "______________________________________________" << std::endl;
-
-		for (int i = 0; i < 10; i++)
+		if (ranking.size() == 0)
 		{
-			std::cout << i << "  -  " << ranking[i].name << "  " << ranking[i].score << std::endl;
+			ranking.insert(ranking.begin(), mtdl::PlayerRanking(name, score));
 		}
 
 		//save ranking
@@ -348,9 +358,13 @@ void Gameplay::Save(std::string name, int score) {
 		std::ofstream fexit("../res/files/ranking.bin", std::ios::out | std::ios::binary);
 		
 		int stringSize = 10;
-		
+		int size = ranking.size();
+
+		//Write size
+		fexit.write(reinterpret_cast<char*>(&size), sizeof(size));
+
 		//Write to file
-		for (int i = 0; i < 10; i++)
+		for (int i = 0; i < ranking.size(); i++)
 		{
 			//convert string to char arr
 			char nameC[10];
@@ -383,36 +397,48 @@ void Gameplay::LoadRanking() {
 		//Open file
 		std::ifstream rankingFile("../res/files/ranking.bin", std::ios::in | std::ios::binary);
 
-		//Read
-		for (int i = 0; i < 10; i++)
+		if (rankingFile.is_open())
 		{
-			mtdl::PlayerRanking* p = new mtdl::PlayerRanking();
+			//Read Ranking Size
+			rankingFile.read(reinterpret_cast<char*>(&rankingSize), sizeof(rankingSize));
 
-			//Read Name
-			size_t len;
-			rankingFile.read(reinterpret_cast<char*>(&len), sizeof(size_t)); //read string size
-			char* tmp = new char[len + 1]; //create char array of string size
-			rankingFile.read(tmp, len); //read string
-			tmp[len] = '\0'; //add end in last pos
-			p->name = tmp; //save info into player
-			delete[]tmp; //free memory
+			//Read
+			for (int i = 0; i < rankingSize; i++)
+			{
+				mtdl::PlayerRanking* p = new mtdl::PlayerRanking();
 
-			//Read score
-			rankingFile.read(reinterpret_cast<char*>(&p->score), sizeof(p->score));
+				//Read Name
+				size_t len;
+				rankingFile.read(reinterpret_cast<char*>(&len), sizeof(size_t)); //read string size
+				char* tmp = new char[len + 1]; //create char array of string size
+				rankingFile.read(tmp, len); //read string
+				tmp[len] = '\0'; //add end in last pos
+				p->name = tmp; //save info into player
+				delete[]tmp; //free memory
 
-			//Add player to vector
-			ranking.push_back(*p);
+				//Read score
+				rankingFile.read(reinterpret_cast<char*>(&p->score), sizeof(p->score));
 
-			delete(p);
+				//Add player to vector
+				ranking.push_back(*p);
+
+				delete(p);
+			}
+		}
+		else
+		{
+			std::ofstream ranking("../res/files/ranking.bin", std::ios::out | std::ios::binary);
+
+			//set size to 0
+			int size = 0;
+
+			ranking.write(reinterpret_cast<char*>(&size), sizeof(size));
+
+			ranking.close();
 		}
 	}
 	catch (const std::exception& e)
 	{
 		std::cout << e.what() << std::endl;
-	}
-
-	for (int i = 0; i < ranking.size() ; i++)
-	{
-		std::cout << i << "  -  " << ranking[i].name << "  " << ranking[i].score << std::endl;
 	}
 }

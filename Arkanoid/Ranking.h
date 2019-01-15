@@ -15,6 +15,7 @@ class Ranking :
 	public Scene
 {
 private:
+	int rankingSize;
 	std::vector<mtdl::PlayerRanking> ranking;
 	std::vector<mtdl::Rect*> rects;
 

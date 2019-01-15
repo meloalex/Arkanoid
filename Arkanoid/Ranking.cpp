@@ -40,7 +40,7 @@ void Ranking::Draw() {
 	returnButton->Draw();
 
 	// i = id, j = rect
-	for (int i = 0, j = 0; i < 10; i++, j +=3)
+	for (int i = 0, j = 0; i < rankingSize; i++, j +=3)
 	{
 		Renderer::Instance()->PushImage("num" + std::to_string(i), *rects[j]);
 		Renderer::Instance()->PushImage("player_name" + static_cast<char>(i), *rects[j + 1]);
@@ -56,27 +56,44 @@ void Ranking::LoadRanking() {
 		//Open file
 		std::ifstream rankingFile("../res/files/ranking.bin", std::ios::in | std::ios::binary);
 
-		//Read
-		for (int i = 0; i < 10; i++)
+		if (rankingFile.is_open())
 		{
-			mtdl::PlayerRanking* p = new mtdl::PlayerRanking();
+			//Read Ranking Size
+			rankingFile.read(reinterpret_cast<char*>(&rankingSize), sizeof(rankingSize));
 
-			//Read Name
-			size_t len;
-			rankingFile.read(reinterpret_cast<char*>(&len), sizeof(size_t)); //read string size
-			char* tmp = new char[len + 1]; //create char array of string size
-			rankingFile.read(tmp, len); //read string
-			tmp[len] = '\0'; //add end in last pos
-			p->name = tmp; //save info into player
-			delete[]tmp; //free memory
+			//Read
+			for (int i = 0; i < rankingSize; i++)
+			{
+				mtdl::PlayerRanking* p = new mtdl::PlayerRanking();
 
-			//Read score
-			rankingFile.read(reinterpret_cast<char*>(&p->score), sizeof(p->score));
+				//Read Name
+				size_t len;
+				rankingFile.read(reinterpret_cast<char*>(&len), sizeof(size_t)); //read string size
+				char* tmp = new char[len + 1]; //create char array of string size
+				rankingFile.read(tmp, len); //read string
+				tmp[len] = '\0'; //add end in last pos
+				p->name = tmp; //save info into player
+				delete[]tmp; //free memory
 
-			//Add player to vector
-			ranking.push_back(*p);
+				//Read score
+				rankingFile.read(reinterpret_cast<char*>(&p->score), sizeof(p->score));
 
-			delete(p);
+				//Add player to vector
+				ranking.push_back(*p);
+
+				delete(p);
+			}
+		}
+		else
+		{
+			std::ofstream ranking("../res/files/ranking.bin", std::ios::out | std::ios::binary);
+
+			//set size to 0
+			int size = 0;
+
+			ranking.write(reinterpret_cast<char*>(&size), sizeof(size));
+
+			ranking.close();
 		}
 	}
 	catch (const std::exception& e)
@@ -91,8 +108,11 @@ void Ranking::Fill() {
 
 	char s[10] = "AlexMario";
 	int stringSize = 10, score = 0;
+	int size = 5;
 
-	for (int i = 0; i < 10; i++)
+	fexit.write(reinterpret_cast<char*>(&size), sizeof(size));
+
+	for (int i = 0; i < 5; i++)
 	{
 		fexit.write(reinterpret_cast<char*>(&stringSize), sizeof(stringSize));
 		fexit.write(s, sizeof(s));
@@ -105,10 +125,10 @@ void Ranking::Fill() {
 void Ranking::DrawRanking() {
 	mtdl::Rect* r;
 	int x = 100, y = 100;
-	int numOffset = 20, scoreOffset = 50;
+	int numOffset = 20, scoreOffset = 300;
 	int spaceY = 10;
 
-	for (int i = 0; i < 10; i++)
+	for (int i = 0; i < rankingSize; i++)
 	{
 		
 		//Number
@@ -123,7 +143,7 @@ void Ranking::DrawRanking() {
 
 		//Score
 		Renderer::Instance()->LoadTextureText("sunspire24", mtdl::Text(std::to_string(ranking[i].score), mtdl::Color(255, 255, 255, 255), "player_score" + static_cast<char>(i)));
-		r = new mtdl::Rect(x + Renderer::Instance()->GetTextureSize("player_score" + static_cast<char>(i)).x + scoreOffset, y, Renderer::Instance()->GetTextureSize("player_score" + static_cast<char>(i)));
+		r = new mtdl::Rect(x + scoreOffset, y, Renderer::Instance()->GetTextureSize("player_score" + static_cast<char>(i)));
 		rects.push_back(r);
 		
 		y += Renderer::Instance()->GetTextureSize("player_name" + static_cast<char>(i)).y + spaceY;

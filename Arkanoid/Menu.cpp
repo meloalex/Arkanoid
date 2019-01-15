@@ -14,10 +14,17 @@ Menu::Menu()
 	backgroundTexture = "background_menu";
 
 	//Audio
-	toggleSoundButton = soundOnButton;
-	sound = true;
+	if (!AudioManager::Instance()->audioStarted) {
+		AudioManager::Instance()->StartAudio("main_theme", 50, -1);
+		AudioManager::Instance()->audioStarted = true;
+	};
 
-	if (!AudioManager::Instance()->audioOn) { AudioManager::Instance()->StartAudio("main_theme", 50, -1); };	
+	sound = AudioManager::Instance()->audioOn;
+
+	if (sound)
+		toggleSoundButton = soundOnButton;
+	else
+		toggleSoundButton = soundOffButton;
 }
 
 Menu::~Menu()

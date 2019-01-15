@@ -1,5 +1,6 @@
 ﻿  Gameplay.cpp
-c:\users\alexe\source\repos\arkanoid\arkanoid\gameplay.cpp(120): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
-c:\users\alexe\source\repos\arkanoid\arkanoid\gameplay.cpp(377): warning C4018: '<': signed/unsigned mismatch
+c:\users\alexe\source\repos\arkanoid\arkanoid\gameplay.cpp(124): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+c:\users\alexe\source\repos\arkanoid\arkanoid\gameplay.cpp(337): warning C4018: '<': signed/unsigned mismatch
+c:\users\alexe\source\repos\arkanoid\arkanoid\gameplay.cpp(367): warning C4018: '<': signed/unsigned mismatch
   Arkanoid.vcxproj -> C:\Users\alexe\source\repos\Arkanoid\\bin\Win32Debug\Arkanoid.exe
   0 archivo(s) copiado(s)

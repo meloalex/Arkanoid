@@ -6,9 +6,11 @@
 #include "Player.h"
 #include "PowerUp.h"
 #include "Block.h"
+#include "AudioManager.h"
 #include "../dep/inc/mtdl/mtdl.h"
 
 #include <iostream>
+#include <fstream>
 #include <sstream>
 #include <fstream>
 #include <string>
@@ -55,6 +57,7 @@ private:
 	bool sound;
 
 	std::vector<mtdl::PlayerRanking> ranking;
+	int rankingSize;
 public:
 	Ball ball;
 	Player playerOne;
